@@ -15,7 +15,6 @@
 
 #include "METARmap.h"
 
-
 // this website returns the xml of the metar
 // Curl Callback used by GetData 
 static size_t
@@ -166,6 +165,7 @@ char GetFlightCategory(char *sFlightCat) {
 	char *sSkyCond = sFlightCat + 17;
 	char cCond = sSkyCond[0];
 	printf("%c", cCond);  // the first letter is all we need
+	fflush(stdout);
 	return cCond;
 }
 
@@ -243,7 +243,6 @@ char ParseTheData(char *sAirportCode, struct MemoryStruct sAirportData)
 		    cCond = 'E';
 		    cVis = GetVisibility(sRawData);
 		    cSky = GetSkyCondition(sRawData);
-		    printf("No flt cat vis %c sky %c", cVis, cSky);
 		    if (cSky == 'L' || cVis == 'L')
 			    cCond = 'L';
 		    else if (cSky == 'I' || cVis == 'I')

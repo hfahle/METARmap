@@ -1,6 +1,7 @@
 # executable # 
 BIN_NAME = test
-LIBS = curl m
+RELEASE_NAME = METARmap
+LIBS = curl m pthread rt
 SLIBS = ../rpi_ws281x/libws2811.a
 SRC_EXT = c
 SRC := $(wildcard *.c)
@@ -25,3 +26,5 @@ run: $(BIN_NAME)
 clearrun: $(BIN_NAME)
 	sudo ./$(BIN_NAME)
 	
+release: $(BIN_NAME)
+	cp ./$(BIN_NAME) ./$(RELEASE_NAME)
