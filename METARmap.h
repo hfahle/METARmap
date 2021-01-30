@@ -21,21 +21,33 @@
 #define MVFR 5
 #define NO_AIRPORT_DATA 2
 
- // these 3 work together
+ // these 3 are for replay and work together
 #define HISTORY_RECS_PER_DAY 288
-#define MAX_HISTORY_RECS 2880
+#define HISTORY_RECS_PER_HOUR 12
 #define MAX_REPLAY_DAYS 10    
+#define SLOWEST_WE_GO (1000000 / 5)  //  1/5 of a second
+#define MAX_HISTORY_RECS HISTORY_RECS_PER_DAY * MAX_REPLAY_DAYS
+
+#define REC_LEN (LED_COUNT*3)+1	// 3 for each led plus '\n' 
 
 #define SEM_PERMISSIONS S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH
 extern const char *semName;
 
+extern int num_replay_hours;
+extern int clear_on_exit;
+extern int replay_mode;
+extern int night_mode;
+extern int test_mode;
+extern int free_the_semaphore;
+extern volatile uint8_t running;
+extern ws2811_led_t dotcolors[];
+
 // condition defines for color choices index into the dotcolors array
 
-#define REC_LEN (LED_COUNT*3)+1	// 3 for each led plus '\n' 
-
-struct MemoryStruct getData(char *url);
-int ReadWeatherData(char *cWxString);
-char ParseTheData(char *sAirportCode, struct MemoryStruct sAirportData);
+struct stAirport {
+    char sAirportCode[5];
+    int iLedNo;
+};
 
 // This structure is used by GetData 
 struct MemoryStruct {
@@ -43,5 +55,10 @@ struct MemoryStruct {
   size_t size;
 };
 
-
+struct MemoryStruct getData(char *url);
+int ReadWeatherData(char *cWxString);
+char ParseTheData(char *sAirportCode, struct MemoryStruct sAirportData);
+int NumRecsInHistory(FILE *fDay);
+void Replay(void);
+int LiveMetarMap(void);
 
