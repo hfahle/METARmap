@@ -18,3 +18,4 @@ make release
 chmod +755 refresh.sh
 chmod +755 lightsoff.sh
 sudo crontab -e
+
