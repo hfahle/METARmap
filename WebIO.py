@@ -32,8 +32,8 @@ class MyServer(BaseHTTPRequestHandler):
 			<h1>Welcome to Fahle home Automation page</h1>
 			<p>Current GPU temperature is {}</p>
 			<form action="/" method="POST">
-				<label style="50px;width:200px;font-size:large" for="days">Days to replay (1 to 10):</label>
-				<input style="height:50px;width:200px;font-size:large" type="number" id="days" name="days" min="1" max="10">
+				<label style="50px;width:200px;font-size:large" for="hours">Hours to replay (1 to 240):</label>
+				<input style="height:50px;width:200px;font-size:large" type="number" id="hours" name="hours" min="1" max="240">
 				<input style="height:50px;width:200px;font-size:large" type="submit" name="submit" value="Ok">
 				<input style="height:50px;width:200px;font-size:large" type="submit" name="submit" value="Clear">
 			</form>
@@ -50,11 +50,11 @@ class MyServer(BaseHTTPRequestHandler):
 		content_length = int(self.headers['Content-Length']) # Get the size of data
 		post_data = self.rfile.read(content_length).decode("utf-8") # Get the data
 		submit_data = post_data.split("submit=")[1] # Only keep the value
-		days_data = post_data.split("&")[0] #only keep the days
-		days_data = days_data.split("=")[1] #only keep the value
-		print("Days to repeat {}".format(days_data)) #put out the days so we know
+		hours_data = post_data.split("&")[0] #only keep the hours
+		hours_data = hours_data.split("=")[1] #only keep the value
+		print("Hours to repeat {}".format(hours_data)) #put out the hours so we know
 		if submit_data == 'Ok':
-			subprocess.call(['sh', './replay.sh', days_data])
+			subprocess.call(['sh', './replay.sh', hours_data])
 		else:
 			subprocess.call(['sh', './lightsoff.sh'])
 			
