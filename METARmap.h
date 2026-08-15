@@ -1,6 +1,6 @@
 #include "ws2811.h"
 
-#define AIRPTSTR   "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&hoursBeforeNow=5&mostRecentForEachStation=true&stationString="
+#define AIRPTSTR   "https://aviationweather.gov/api/data/metar?format=xml&hours=5&ids="
 
 #define TRUE 1
 #define FALSE 0

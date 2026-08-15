@@ -11,7 +11,8 @@
 * you represent as anything resembling an official flight briefing
 * unless you get it certified and do a LOT more testing than I have.
 * THIS PROGRAM IS FOR FUN, PEOPLE. 
-* modification: 2021/01/15 hlf, 2021/01/29 hlf
+* modification: 2021/01/15 hlf, 2021/01/29 hlf 2023/10/27 waf
+* 2025/09/18 waf rest api
 **********************************************************************/
 #define _XOPEN_SOURCE 500
 
@@ -55,9 +56,10 @@ struct MemoryStruct getData(char *url)
   CURL *curl_handle;
   CURLcode res;
 
-  struct curl_slist * pheaders = NULL;
+  //struct curl_slist * slist = NULL;
   struct MemoryStruct chunk;
 
+  //slist = curl_slist_append(slist, "Accept:application/xml");
   chunk.memory = malloc(1);  /* will be grown as needed by the realloc above */
   chunk.size = 0;    /* no data at this point */
 
@@ -65,6 +67,9 @@ struct MemoryStruct getData(char *url)
 
   /* init the curl session */
   curl_handle = curl_easy_init();
+
+  /* specify HEADER */
+  //curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, slist);
 
   /* specify URL to get */
   curl_easy_setopt(curl_handle, CURLOPT_URL, url);
@@ -94,7 +99,6 @@ struct MemoryStruct getData(char *url)
      *
      * We will do something nice with it!
      */
-
   }
 
   /* cleanup curl stuff */
@@ -236,7 +240,7 @@ char ParseTheData(char *sAirportCode, struct MemoryStruct sAirportData)
     char sSearchStr[16];
     char *sThisAirportData;
 
-    sprintf(sSearchStr, "<raw_text>%4s", sAirportCode);
+    sprintf(sSearchStr, "<raw_text>METAR %4s", sAirportCode);
 
     sThisAirportData = strstr(sAirportData.memory, sSearchStr);
     if (sThisAirportData == NULL) {
@@ -418,11 +422,11 @@ int LiveMetarMap(void)
 		break;
 	}
 	strcat(cWxReqString, stAirports[i].sAirportCode);
-	strcat(cWxReqString, "%20");
+	strcat(cWxReqString, "%2C");
 
 	numAirportsInFile++;
     }
-
+    strcat(cWxReqString, "KDTO");
     fclose(fAirports);
 
     printf("Passing this req %s\n", cWxReqString);
